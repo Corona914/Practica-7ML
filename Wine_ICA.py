@@ -6,6 +6,7 @@ import seaborn as sns
 from ucimlrepo import fetch_ucirepo
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import FastICA
+from sklearn.metrics import silhouette_score  
 
 sns.set(style='whitegrid')
 
@@ -46,6 +47,13 @@ ICA= FastICA(n_components=n_components, algorithm='parallel', whiten='unit-varia
 X_ICA = ICA.fit_transform(X_scaled) 
 print(f"Dimensiones después de FastICA: {X_ICA.shape}")
 
+#IMPLEMENTACION DE METRICA SILHOUETTE
+silhouette_avg = silhouette_score(X_ICA, y)
+
+print("--- Evaluación con Silhouette Score ---")
+print(f"El Silhouette Score promedio es: {silhouette_avg:.4f}")
+print("-" * 42)
+
 #GRAFICOS
 #DATOS ORIGEN
 feature_1_name = 'volatile_acidity'
@@ -61,7 +69,7 @@ sns.scatterplot(
     palette='inferno',
     alpha=0.7
 )
-plt.title('Dataset Original (2 de 11 Características)', fontsize=16)
+plt.title('Dataset WINE Original', fontsize=16)
 plt.xlabel(f'{feature_1_name} (Estandarizado)')
 plt.ylabel(f'{feature_2_name} (Estandarizado)')
 plt.legend(title='Calidad del Vino')

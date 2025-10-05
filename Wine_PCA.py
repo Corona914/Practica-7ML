@@ -6,6 +6,7 @@ import seaborn as sns
 from ucimlrepo import fetch_ucirepo
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+from sklearn.metrics import silhouette_score  
 
 sns.set(style='whitegrid')
 
@@ -47,6 +48,13 @@ pca = PCA(n_components=n_components)
 X_pca = pca.fit_transform(X_scaled) # Aplicamos PCA a los datos escalados
 print(f"Dimensiones después de PCA: {X_pca.shape}")
 
+#IMPLEMENTACION DE METRICA SILHOUETTE
+silhouette_avg = silhouette_score(X_pca, y)
+
+print("--- Evaluación con Silhouette Score ---")
+print(f"El Silhouette Score promedio es: {silhouette_avg:.4f}")
+print("-" * 42)
+
 #GRAFICOS
 #DATOS ORIGEN
 feature_1_name = 'volatile_acidity'
@@ -62,7 +70,8 @@ sns.scatterplot(
     palette='inferno',
     alpha=0.7
 )
-plt.title('Dataset Original (2 de 11 Características)', fontsize=16)
+
+plt.title('Dataset WINE Original ', fontsize=16)
 plt.xlabel(f'{feature_1_name} (Estandarizado)')
 plt.ylabel(f'{feature_2_name} (Estandarizado)')
 plt.legend(title='Calidad del Vino')
@@ -76,6 +85,7 @@ sns.scatterplot(
     x=X_pca[:, 0], # Eje X es el primer componente principal
     y=X_pca[:, 1], # Eje Y es el segundo componente principal
     hue=y, 
+    palette='inferno',
     alpha=0.7
 )
 
