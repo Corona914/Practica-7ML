@@ -1,20 +1,15 @@
-# 1. Carga de Librerías
+# Wine_PCA.py
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-# Importar la nueva librería para cargar datos y las herramientas de sklearn
 from ucimlrepo import fetch_ucirepo
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
-# Configuración de estilo para los gráficos
 sns.set(style='whitegrid')
 
-# 2. Carga de Datos con ucimlrepo
-# --------------------------------
-# Cargamos el dataset "Wine Quality" (ID 186)
+#  dataset "Wine Quality" (ID 186)
 wine_quality = fetch_ucirepo(id=186)
 
 # Extraemos las características (X) y el objetivo (y)
@@ -28,7 +23,7 @@ print(feature_names)
 print("-" * 42)
 
 
-# --- VERIFICACIÓN DEL TAMAÑO DEL NUEVO DATASET ---
+#cantidad de datos original
 print("--- Información del Dataset Wine Quality ---")
 print(f"Dimensiones de los datos originales: {X.shape}")
 print(f"Número total de muestras (vinos): {X.shape[0]}")
@@ -41,31 +36,22 @@ print(y.value_counts().sort_index())
 print("-" * 42)
 
 
-# 3. Escalado de Datos
-# --------------------
-# Es crucial estandarizar los datos para PCA
+# Escalado de Datos
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
-
-# 4. Aplicación del Algoritmo PCA
-# ---------------------------------
+# Aplicación del Algoritmo PCA
 print("Aplicando PCA...")
 n_components = 2 # Vamos a reducir a 2 dimensiones para visualizar
 pca = PCA(n_components=n_components)
 X_pca = pca.fit_transform(X_scaled) # Aplicamos PCA a los datos escalados
 print(f"Dimensiones después de PCA: {X_pca.shape}")
 
-
-# 5. VISUALIZACIONES
-# --------------------
-
-# --- GRÁFICO 1: DATASET ORIGINAL (eligiendo 2 características) ---
-# CORRECCIÓN: Usamos el nombre correcto con guion bajo
+#GRAFICOS
+#DATOS ORIGEN
 feature_1_name = 'volatile_acidity'
 feature_2_name = 'alcohol'
 
-# Para facilitar el acceso, convertimos X_scaled de vuelta a un DataFrame
 X_scaled_df = pd.DataFrame(X_scaled, columns=feature_names)
 
 plt.figure(figsize=(10, 8))
@@ -83,15 +69,13 @@ plt.legend(title='Calidad del Vino')
 plt.grid(True)
 plt.show()
 
-
-# --- GRÁFICO 2: RESULTADO DE PCA ---
+# GRÁFICO RESULTADO DE PCA
 plt.figure(figsize=(10, 8))
 
 sns.scatterplot(
     x=X_pca[:, 0], # Eje X es el primer componente principal
     y=X_pca[:, 1], # Eje Y es el segundo componente principal
-    hue=y, # Coloreamos por la puntuación de calidad
-    palette='inferno',
+    hue=y, 
     alpha=0.7
 )
 

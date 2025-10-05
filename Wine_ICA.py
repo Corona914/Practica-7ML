@@ -1,4 +1,4 @@
-# 1. Carga de Librerías
+# Wine_FASTICA.py
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,26 +7,21 @@ from ucimlrepo import fetch_ucirepo
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import FastICA
 
-# Configuración de estilo para los gráficos
 sns.set(style='whitegrid')
 
-# 2. Carga de Datos con ucimlrepo
-# --------------------------------
-# Cargamos el dataset "Wine Quality" (ID 186)
+#  dataset "Wine Quality" (ID 186)
 wine_quality = fetch_ucirepo(id=186)
 
 # Extraemos las características (X) y el objetivo (y)
 X = wine_quality.data.features
-y = wine_quality.data.targets['quality'] # Es una columna llamada 'quality'
+y = wine_quality.data.targets['quality'] 
 
-# Guardamos y MOSTRAMOS los nombres de las características para evitar errores
 feature_names = X.columns.tolist()
 print("--- Características Disponibles en el Dataset ---")
 print(feature_names)
 print("-" * 42)
 
-
-# --- VERIFICACIÓN DEL TAMAÑO DEL NUEVO DATASET ---
+#cantidad de datos original
 print("--- Información del Dataset Wine Quality ---")
 print(f"Dimensiones de los datos originales: {X.shape}")
 print(f"Número total de muestras (vinos): {X.shape[0]}")
@@ -39,31 +34,23 @@ print(y.value_counts().sort_index())
 print("-" * 42)
 
 
-# 3. Escalado de Datos
-# --------------------
-# Es crucial estandarizar los datos para PCA
+# Escalado de Datos
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
 
-# 4. Aplicación del Algoritmo PCA
-# ---------------------------------
+#algortimo FastICA
 print("Aplicando FastICA...")
 n_components = 2 # Vamos a reducir a 2 dimensiones para visualizar
 ICA= FastICA(n_components=n_components, algorithm='parallel', whiten='unit-variance', fun='logcosh', max_iter=200, tol=0.0001, random_state=42)
 X_ICA = ICA.fit_transform(X_scaled) 
 print(f"Dimensiones después de FastICA: {X_ICA.shape}")
 
-
-# 5. VISUALIZACIONES
-# --------------------
-
-# --- GRÁFICO 1: DATASET ORIGINAL (eligiendo 2 características) ---
-# CORRECCIÓN: Usamos el nombre correcto con guion bajo
+#GRAFICOS
+#DATOS ORIGEN
 feature_1_name = 'volatile_acidity'
 feature_2_name = 'alcohol'
 
-# Para facilitar el acceso, convertimos X_scaled de vuelta a un DataFrame
 X_scaled_df = pd.DataFrame(X_scaled, columns=feature_names)
 
 plt.figure(figsize=(10, 8))
@@ -82,13 +69,13 @@ plt.grid(True)
 plt.show()
 
 
-# --- GRÁFICO 2: RESULTADO DE PCA ---
+# GRÁFICO RESULTADO DE fastICA
 plt.figure(figsize=(10, 8))
 
 sns.scatterplot(
     x=X_ICA[:, 0], # Eje X es el primer componente principal
     y=X_ICA[:, 1], # Eje Y es el segundo componente principal
-    hue=y, # Coloreamos por la puntuación de calidad
+    hue=y, 
     palette='inferno',
     alpha=0.7
 )
